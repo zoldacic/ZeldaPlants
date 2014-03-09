@@ -46,7 +46,7 @@ public class MapGenerator
     public void Generate() {
         Map = new int [_sizeX, _sizeY];
 
-        for (int x = 0; x < _sizeX; x++)
+       for (int x = 0; x < _sizeX; x++)
         {
             for (var y = 0; y < _sizeY; y++)
             {
@@ -61,76 +61,80 @@ public class MapGenerator
         var spriteDirectionColumns = SpriteDirection.Up;
         var spriteDirectionRows = SpriteDirection.Up;
 
+		// Set initial sprite at position 0,0
+		Map[currentX, currentY] = currentSpriteY * _noOfSpriteColumns + currentSpriteX;
+
 		Debug.Log ("Retrieving initial possible directions");
 		var possibleDirections = GetPossibleDirections(currentX, currentY);
 
-        while (possibleDirections.Any())
-        {
+        //while (possibleDirections.Any())
+        //{
             var directions = GetRandomDirections(possibleDirections);
-            AddSpriteNoToMap(ref currentX, ref currentY, ref currentSpriteX, ref currentSpriteY, directions, ref spriteDirectionColumns, ref spriteDirectionRows);
+            AddDirections(currentX, currentY, currentSpriteX, currentSpriteY, directions, spriteDirectionColumns, spriteDirectionRows);
 
-            Debug.Log("Retrieving possible directions");
-            possibleDirections = GetPossibleDirections(currentX, currentY);
-        }
+            //Debug.Log("Retrieving possible directions");
+            //possibleDirections = GetPossibleDirections(currentX, currentY);
+        //}
     }
 
-    private void AddSpriteNoToMap(ref int currentX, ref int currentY, ref int currentSpriteX, ref int currentSpriteY, IEnumerable<Direction> directions, ref SpriteDirection spriteDirectionColumns, ref SpriteDirection spriteDirectionRows)
+	private void AddDirections(int currentX, int currentY, int currentSpriteX, int currentSpriteY, IEnumerable<Direction> directions, SpriteDirection spriteDirectionColumns, SpriteDirection spriteDirectionRows)
     {
         foreach (var direction in directions)
         {
-            CheckSpriteDirections(ref currentSpriteX, ref currentSpriteY, ref spriteDirectionColumns, ref spriteDirectionRows, direction);
-
-            switch (direction)
-            {
-                case Direction.West:
-                    currentX -= 1;
-                    break;
-                case Direction.East:
-                    currentX += 1;
-                    break;
-                case Direction.North:
-                    currentY -= 1;
-                    break;
-                case Direction.South:
-                    currentX += 1;
-                    break;
-            }
-
-            Map[currentX, currentY] = currentSpriteY * _noOfSpriteColumns + currentSpriteX;
+			AddSpriteNo(currentX, currentY, currentSpriteX, currentSpriteY, spriteDirectionColumns, spriteDirectionRows, direction);
         }                
     }
 
-    private void CheckSpriteDirections(ref int currentSpriteX, ref int currentSpriteY, ref SpriteDirection spriteDirectionColumns, ref SpriteDirection spriteDirectionRows, Direction direction)
+	private void AddSpriteNo(int currentX, int currentY, int currentSpriteX, int currentSpriteY, SpriteDirection spriteDirectionColumns, SpriteDirection spriteDirectionRows, Direction direction)
     {
-        if (direction == Direction.West || direction == Direction.East)
-        {
-            var newSpriteX = currentSpriteX + (int) spriteDirectionColumns;
+		// Calculate new SpriteX and SpriteY
+		if (direction == Direction.West || direction == Direction.East)
+		{
+			var newSpriteX = currentSpriteX + (int) spriteDirectionColumns;			
+			if (newSpriteX < 0 || newSpriteX > _noOfSpriteColumns - 1)
+			{
+				spriteDirectionColumns = spriteDirectionColumns == SpriteDirection.Up ? SpriteDirection.Down : SpriteDirection.Up;
+				newSpriteX = currentSpriteX + (int) spriteDirectionColumns;
+			}
+			
+			currentSpriteX = newSpriteX;
+		}
+		else
+		{
+			var newSpriteY = currentSpriteY + (int) spriteDirectionRows;			
+			if (newSpriteY < 0 || newSpriteY > _noOfSpriteRows - 1)
+			{
+				spriteDirectionColumns = spriteDirectionColumns == SpriteDirection.Up ? SpriteDirection.Down : SpriteDirection.Up;
+				newSpriteY = currentSpriteY + (int) spriteDirectionRows;
+			}
+			
+			currentSpriteY = newSpriteY;
+		}
 
-            if (newSpriteX < 0 || newSpriteX > _noOfSpriteColumns - 1)
-            {
-                spriteDirectionColumns = spriteDirectionColumns == SpriteDirection.Up
-                    ? SpriteDirection.Down
-                    : SpriteDirection.Up;
-                newSpriteX = currentSpriteX + (int) spriteDirectionColumns;
-            }
+		switch (direction)
+		{
+		case Direction.West:
+			currentX -= 1;
+			break;
+		case Direction.East:
+			currentX += 1;
+			break;
+		case Direction.North:
+			currentY -= 1;
+			break;
+		case Direction.South:
+			currentY += 1;
+			break;
+		}
+		
+		Map[currentX, currentY] = currentSpriteY * _noOfSpriteColumns + currentSpriteX;
+		var possibleDirections = GetPossibleDirections(currentX, currentY);
 
-            currentSpriteX = newSpriteX;
-        }
-        else
-        {
-            var newSpriteY = currentSpriteY + (int) spriteDirectionRows;
-
-            if (newSpriteY < 0 || newSpriteY > _noOfSpriteRows - 1)
-            {
-                spriteDirectionColumns = spriteDirectionColumns == SpriteDirection.Up
-                    ? SpriteDirection.Down
-                    : SpriteDirection.Up;
-                newSpriteY = currentSpriteY + (int) spriteDirectionRows;
-            }
-
-            currentSpriteY = newSpriteY;
-        }
-    }
+		if (possibleDirections.Any ()) {
+			var directions = GetRandomDirections(possibleDirections);
+			AddDirections(currentX, currentY, currentSpriteX, currentSpriteY, directions, spriteDirectionColumns, spriteDirectionRows);
+		}
+	}
 
 
     private IEnumerable<Direction> GetRandomDirections(List<Direction> possibleDirections) {
