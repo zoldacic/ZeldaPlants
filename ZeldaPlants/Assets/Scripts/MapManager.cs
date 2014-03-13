@@ -41,51 +41,55 @@ namespace Assets
 				Debug.Log(string.Format("Screen.width: {0}, screen.height: {1}", Screen.width, Screen.height));
 
             var map = _mapGenerator.Map;
-            for (var x = 0; x < SizeX; x++)
-            {
-                for (var y = 0; y < SizeY; y++)
-                {
-                    //var textureRect = new Rect(x*81, y*98, 81, 98);
-                    //var texture = textures[map[x, y]];
-                    //sprite = Sprite.Create((texture, textureRect, new Vector2(0, 0), 100.0f);
+			    for (var x = 0; x < SizeX; x++)
+			    {
+			        for (var y = 0; y < SizeY; y++)
+			        {
+                        // Do not create sand
+			            if (map[x, y] == -1) continue;
 
-                  
-                        var go = new GameObject();
-                        var spriteRenderer = go.AddComponent<SpriteRenderer>();
+			            //var textureRect = new Rect(x*81, y*98, 81, 98);
+			            //var texture = textures[map[x, y]];
+			            //sprite = Sprite.Create((texture, textureRect, new Vector2(0, 0), 100.0f);
 
-                        var spriteNo = map[x, y]; // The first sprite is the full image so the number is one of
 
-                        if (spriteNo < sprites.Length)
-                        {
+			            var go = new GameObject();
+			            var spriteRenderer = go.AddComponent<SpriteRenderer>();
+			            spriteRenderer.sortingLayerName = "Background";
 
-								var sprite = map[x, y] > -1 ? sprites[spriteNo] : sand;
+			            var spriteNo = map[x, y]; // The first sprite is the full image so the number is one of
 
-                            //go.transform.Translate(x * 80, y * 80, 0);
-                            // go.transform.position = new Vector2(x * 180 / (float)Screen.width, y * 80 / (float)Screen.height); //= new Vector3(x * 80f, y * 80f);
-                            //go.transform.position = new Vector2(x, y);
+			            if (spriteNo < sprites.Length)
+			            {
 
-								var pixelAdjustment = 40f; //51.591f;
-								var screenPoint = new Vector3(x*pixelAdjustment + 500, -y*pixelAdjustment + 500, 0);
-                            var worldPos = Camera.main.ScreenToWorldPoint(screenPoint);
-                            worldPos.z = 0f;
-                            //worldPos.y = 0f;
-                            go.transform.position = worldPos;
+			                var sprite = map[x, y] > -1 ? sprites[spriteNo] : sand;
 
-                            //sprite.textureRect.x = 0;
-                            //sprite.rect.y = 0;
+			                //go.transform.Translate(x * 80, y * 80, 0);
+			                // go.transform.position = new Vector2(x * 180 / (float)Screen.width, y * 80 / (float)Screen.height); //= new Vector3(x * 80f, y * 80f);
+			                //go.transform.position = new Vector2(x, y);
 
-                            spriteRenderer.sprite = sprite;
-                            Debug.Log(sprite.rect);
-                        }
-                        else
-                        {
-                            Debug.LogError("Calculated sprite index is larger than array!");
-                        }
-             
-                }
-            }
+			                var pixelAdjustment = 145.5f;//40f; //51.591f;
+			                var screenPoint = new Vector3(x*pixelAdjustment + 500, -y*pixelAdjustment + 500, 0);
+			                var worldPos = Camera.main.ScreenToWorldPoint(screenPoint);
+			                worldPos.z = 0f;
+			                //worldPos.y = 0f;
+			                go.transform.position = worldPos;
 
-				_isGenerated = true;
+			                //sprite.textureRect.x = 0;
+			                //sprite.rect.y = 0;
+
+			                spriteRenderer.sprite = sprite;
+			                Debug.Log(sprite.rect);
+			            }
+			            else
+			            {
+			                Debug.LogError("Calculated sprite index is larger than array!");
+			            }
+
+			        }
+			    }
+
+			    _isGenerated = true;
 			}
 
         }
