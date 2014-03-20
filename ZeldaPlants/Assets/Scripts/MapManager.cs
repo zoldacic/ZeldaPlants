@@ -94,7 +94,7 @@ namespace Assets
 			                Debug.LogError("Calculated sprite index is larger than array!");
 			            }
 
-			            var edgeCollider = go.AddComponent<EdgeCollider2D>();
+			            //var edgeCollider = go.AddComponent<EdgeCollider2D>();
 
 
                         //edgeCollider.points
