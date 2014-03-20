@@ -59,6 +59,7 @@ namespace Assets
 
 			            var spriteNo = map[x, y]; // The first sprite is the full image so the number is one of
 
+                        var nextPosition = new Vector3(500, 500, 0);
 			            if (spriteNo < sprites.Length)
 			            {
 
@@ -68,12 +69,19 @@ namespace Assets
 			                // go.transform.position = new Vector2(x * 180 / (float)Screen.width, y * 80 / (float)Screen.height); //= new Vector3(x * 80f, y * 80f);
 			                //go.transform.position = new Vector2(x, y);
 
-			                var pixelAdjustment = 145.5f;//40f; //51.591f;
-			                var screenPoint = new Vector3(x*pixelAdjustment + 500, -y*pixelAdjustment + 500, 0);
-			                var worldPos = Camera.main.ScreenToWorldPoint(screenPoint);
-			                worldPos.z = 0f;
+
+                            // http://catlikecoding.com/unity/tutorials/runner/
+                            //Transform o = (Transform)Instantiate(prefab);
+                            go.transform.localPosition = nextPosition;
+                            nextPosition.x += go.transform.localScale.x * x;
+                            nextPosition.y += go.transform.localScale.y * y;
+
+			                //var pixelAdjustment = 145.5f;//40f; //51.591f;
+			                //var screenPoint = new Vector3(x*pixelAdjustment + 500, -y*pixelAdjustment + 500, 0);
+			                //var worldPos = Camera.main.ScreenToWorldPoint(screenPoint);
+			                //worldPos.z = 0f;
 			                //worldPos.y = 0f;
-			                go.transform.position = worldPos;
+			                //go.transform.position = worldPos;
 
 			                //sprite.textureRect.x = 0;
 			                //sprite.rect.y = 0;
@@ -86,6 +94,10 @@ namespace Assets
 			                Debug.LogError("Calculated sprite index is larger than array!");
 			            }
 
+			            var edgeCollider = go.AddComponent<EdgeCollider2D>();
+
+
+                        //edgeCollider.points
 			        }
 			    }
 

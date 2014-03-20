@@ -8,6 +8,9 @@ namespace Assets.Scripts
         public float JumpForce = 100f;
         public float MaxSpeed = 5f;
 
+        private float horizontal;
+        private float vertical;
+
         void Start () {	
         }
 	
@@ -16,12 +19,12 @@ namespace Assets.Scripts
                 _jump = true;		
             }
 
-            //transform.Translate(new Vector2(0,0) * Time.deltaTime);
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
         }
 	
         void FixedUpdate () {
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+
 
             //if (Mathf.Abs (rigidbody2D.velocity.x) > MaxSpeed) {
             //    rigidbody2D.velocity = new Vector2(Mathf.Sign(rigidbody2D.velocity.x) * MaxSpeed, rigidbody2D.velocity.y);
