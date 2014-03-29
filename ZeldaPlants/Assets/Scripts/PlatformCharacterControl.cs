@@ -28,7 +28,7 @@ namespace Assets.Scripts
 
             Jump();
 
-            _moveHorizontal = CrossPlatformInput.GetAxis("Horizontal");
+            _moveHorizontal = Input.GetAxis("Horizontal");
         }
 
         private void Jump()
@@ -39,7 +39,7 @@ namespace Assets.Scripts
                 _doubleJump = false;
             }
 
-            if (CrossPlatformInput.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 Debug.Log(string.Format("Jumping - Grounded: {0}, DoubleJump: {1}", _grounded, _doubleJump));
                 if (_grounded || !_doubleJump)
